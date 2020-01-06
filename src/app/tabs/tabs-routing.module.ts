@@ -9,13 +9,8 @@ const routes: Routes = [
     children: [
       {
         path: 'tab1',
-        children: [
-          {
-            path: '',
-            loadChildren: () =>
-              import('../tab1/tab1.module').then(m => m.Tab1PageModule)
-          }
-        ]
+        redirectTo: '/register',
+        pathMatch: 'prefix'
       },
       {
         path: 'tab2',
@@ -39,14 +34,14 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/register',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/tabs/tab1',
+    redirectTo: '/register',
     pathMatch: 'full'
   }
 ];

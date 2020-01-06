@@ -1,0 +1,82 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="Back"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class='contentArea'>
+
+  <section class="message">
+    <h1>
+      Sign up
+    </h1>
+  </section>
+
+  <div class='loginCard clearfix'>
+
+    <div class='authArea'>
+
+      <form [formGroup]="registerForm" (ngSubmit)="registerSubmit()" (keyup.enter)="registerSubmit()" novalidate>
+
+        <ion-item>
+          <ion-label position="floating">Username</ion-label>
+          <ion-input [readonly]="googleIdToken" autocomplete="fname" formControlName="username" #input type="text"></ion-input>
+        </ion-item>
+
+        <div class="error-message"
+          *ngIf="!registerForm.controls.username.valid && (registerForm.controls.username.touched ||  isLoading)">
+          <p>Please enter username"</p>
+        </div>
+
+        <ion-item>
+          <ion-label position="floating">Email"</ion-label>
+          <ion-input [readonly]="googleIdToken" formControlName="email" pattern="^\S*[@]\S*[.]\S*$" email type="email"></ion-input>
+        </ion-item>
+
+        <div class="error-message"
+          *ngIf="!registerForm.controls.email.valid && (registerForm.controls.email.touched || isLoading) ">
+          <p *ngIf="registerForm.controls.email.errors.required">Please enter email address"</p>
+          <p *ngIf="!registerForm.controls.email.errors.required && registerForm.controls.email.errors.emailValidation">
+            Please enter valid email address"
+          </p>
+        </div>
+
+        <ion-item class="password_field">
+          <ion-label position="floating">Password"</ion-label>
+          <ion-input formControlName="password" type="{{type}}"></ion-input>
+
+          <ion-button fill="clear" class="password_change_icon skip-hover" (click)="showPassword()">
+            <ion-icon [class.hidden]="showPass" name="eye"></ion-icon>
+            <ion-icon [class.hidden]="!showPass" name="eye-off"></ion-icon>
+          </ion-button>
+        </ion-item>
+
+        <div class="error-message"
+          *ngIf="!registerForm.controls.password.valid && (registerForm.controls.password.touched ||  isLoading)">
+          
+          <p *ngIf="registerForm.controls.password.errors && registerForm.controls.password.errors.required">
+            Please enter password"
+          </p>
+
+          <p *ngIf="registerForm.controls.password.errors && registerForm.controls.password.errors.maxlength">
+           Too long
+          </p>
+            
+          <p *ngIf="registerForm.controls.password.errors && registerForm.controls.password.errors.minlength">
+            Too short
+          </p>
+
+        </div> 
+        
+        <br />
+
+        <ion-button class="btn-register skip-hover" (click)="registerSubmit()" [disabled]="!registerForm.valid || isLoading">
+          <ion-spinner *ngIf="isLoading"></ion-spinner>
+          <span *ngIf="!isLoading">Create an account"</span>
+        </ion-button>
+      </form>
+    </div>
+  </div>
+</ion-content> -->
