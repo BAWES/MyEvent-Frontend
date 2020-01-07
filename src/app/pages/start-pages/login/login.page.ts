@@ -28,8 +28,6 @@ export class LoginPage implements OnInit {
   // Store number of invalid password attempts to suggest reset password
   public _numberOfLoginAttempts = 0;
 
-  public loading = false;
-
   public authSubscription: Subscription;
 
   constructor(
@@ -40,7 +38,6 @@ export class LoginPage implements OnInit {
     public _alertCtrl: AlertController,
     public _platform: Platform,
     public storage: Storage,
-    @Optional() public nav: IonNav,//for testing perpose 
     public modalCtrl: ModalController
   ) {
     // Initialize the Login Form
@@ -59,7 +56,7 @@ export class LoginPage implements OnInit {
   }
 
   ionViewWillLeave() {
-    this.loading = false;
+    this.isLoading = false;
   }
   
   ionViewDidEnter() {

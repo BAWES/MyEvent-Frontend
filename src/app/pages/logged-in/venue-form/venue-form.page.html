@@ -1,0 +1,87 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>venue-form</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Venue Form-->
+  <form [formGroup]="venueForm" (ngSubmit)="onSubmit()" novalidate>
+
+
+    <!-- Venue name field-->
+    <ion-item>
+      <ion-label position="floating">Venue Name</ion-label>
+      <ion-input autocomplete="username" formControlName="venue_name" #input type="text"></ion-input>
+    </ion-item>
+
+    <!-- Venue Location field-->
+    <ion-item>
+      <ion-label position="floating">Venue Location</ion-label>
+      <ion-input formControlName="venue_location"  type="text"></ion-input>
+    </ion-item>
+
+    <!-- Venue Location Latitude field-->
+    <ion-item>
+      <ion-label position="floating">Venue Location Latitude</ion-label>
+      <ion-input formControlName="venue_location_latitude"  type="text"></ion-input>
+    </ion-item>
+
+    <!-- Venue Location Longitude field-->
+    <ion-item>
+      <ion-label position="floating">Venue Location Longitude</ion-label>
+      <ion-input formControlName="venue_location_longitude"  type="text"></ion-input>
+    </ion-item>
+
+    <!-- Venue contact email field-->
+    <ion-item>
+      <ion-label position="floating">Venue contact email</ion-label>
+      <ion-input formControlName="venue_contact_email"  pattern="^\S*[@]\S*[.]\S*$" email type="email"></ion-input>
+    </ion-item>
+
+    <!-- Venue contact phone field-->
+    <ion-item>
+      <ion-label position="floating">Venue contact phone</ion-label>
+      <ion-input formControlName="venue_contact_phone"  type="text"></ion-input>
+    </ion-item>
+
+    <!-- Venue contact website field-->
+    <ion-item>
+      <ion-label position="floating">Venue contact website</ion-label>
+      <ion-input formControlName="venue_contact_website"  type="text"></ion-input>
+    </ion-item>
+
+    <!-- Venue Capacity Minimum field-->
+    <ion-item>
+      <ion-label position="floating">Venue  Capacity Minimum</ion-label>
+      <ion-input formControlName="venue_capacity_minimum"  type="text"></ion-input>
+    </ion-item>
+
+    <!-- Venue Capacity Maximum field-->
+    <ion-item>
+      <ion-label position="floating">Venue  Capacity Maximum</ion-label>
+      <ion-input formControlName="venue_capacity_maximum"  type="text"></ion-input>
+    </ion-item>
+
+
+    <!-- Venue operating hours field-->
+    <ion-item>
+      <ion-label position="floating">Venue operating hours</ion-label>
+      <ion-input formControlName="venue_operating_hours"  type="text"></ion-input>
+    </ion-item>
+
+    <!-- Venue restrictions field-->
+    <ion-item>
+      <ion-label position="floating">Venue restrictions</ion-label>
+      <ion-input formControlName="venue_restrictions"  type="text"></ion-input>
+    </ion-item>
+
+
+    <!-- Submit Sign up form Button-->
+    <ion-button type="submit" [disabled]="!venueForm.valid || isLoading">
+      <ion-spinner *ngIf="isLoading"></ion-spinner>
+      <span *ngIf="!isLoading">Save</span>
+    </ion-button>
+
+  </form>
+</ion-content>

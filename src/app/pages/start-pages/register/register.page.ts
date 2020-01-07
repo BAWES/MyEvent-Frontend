@@ -53,8 +53,8 @@ export class RegisterPage implements OnInit {
  */
   _initForm() {
     this.registerForm = this._formService.group({
-      username: [this.route.snapshot.paramMap.get('username'), Validators.required],
-      email: [this.route.snapshot.paramMap.get('email'), [Validators.required, CustomValidator.emailValidator]],
+      username: ['', Validators.required],
+      email: ['', [Validators.required, CustomValidator.emailValidator]],
       password: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(30)]]
     });
   }

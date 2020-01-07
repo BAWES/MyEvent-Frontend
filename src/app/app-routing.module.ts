@@ -8,23 +8,23 @@ const routes: Routes = [
   },
   {
     path: 'register',
-    loadChildren: () => import('./pages/start-pages/register/register.module').then( m => m.RegisterPageModule)
+    loadChildren: () => import('./pages/start-pages/register/register.module').then(m => m.RegisterPageModule)
   },
   {
     path: 'landing',
-    loadChildren: () => import('./pages/start-pages/landing/landing.module').then( m => m.LandingPageModule)
+    loadChildren: () => import('./pages/start-pages/landing/landing.module').then(m => m.LandingPageModule)
   },
   {
     path: 'login',
-    loadChildren: () => import('./pages/start-pages/login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import('./pages/start-pages/login/login.module').then(m => m.LoginPageModule)
   },
   {
     path: 'register',
-    loadChildren: () => import('./pages/start-pages/register/register.module').then( m => m.RegisterPageModule)
+    loadChildren: () => import('./pages/start-pages/register/register.module').then(m => m.RegisterPageModule)
   },
   {
-    path: 'add-venue',
-    loadChildren: () => import('./pages/logged-in/add-venue/add-venue.module').then( m => m.AddVenuePageModule)
+    path: 'venue-form:venue_uuid',
+    loadChildren: () => import('./pages/logged-in/venue-form/venue-form.module').then(m => m.VenueFormPageModule)
   }
 ];
 @NgModule({
@@ -33,4 +33,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

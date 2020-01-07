@@ -23,7 +23,7 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () =>
-              import('../pages/logged-in/add-venue/add-venue.module').then(m => m.AddVenuePageModule)
+              import('../pages/logged-in/venue-form/venue-form.module').then(m => m.VenueFormPageModule)
           }
         ]
       },
