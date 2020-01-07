@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Optional } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { AlertController, Platform, Events, ModalController, IonNav } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertController, Platform, Events, ModalController, IonNav, ToastController, NavController } from '@ionic/angular';
 import { CustomValidator } from 'src/app/validators/custom.validator';
 import { Storage } from '@ionic/storage';
 import { Subscription } from 'rxjs';
@@ -24,8 +24,6 @@ export class RegisterPage implements OnInit {
   registerForm: FormGroup;
   submitAttempt: boolean = false;
 
-  public googleIdToken: string;
-
   public createAccountSubscription: Subscription;
 
   @ViewChild('input', { static: true }) input;
@@ -34,26 +32,35 @@ export class RegisterPage implements OnInit {
     public route: ActivatedRoute,
     public _formService: FormBuilder,
     public _authService: AuthService,
+    public navCtrl: NavController,
+    public toastController: ToastController,
     public _alertCtrl: AlertController,
     public modalCtrl: ModalController,
     public _platform: Platform,
+    public router: Router,
     public storage: Storage,
     public events: Events,
     @Optional() public nav: IonNav,//for testing perpose 
   ) {
-  } 
+  }
 
   ngOnInit() {
+    this._initForm();
+  }
+
+  /**
+ * Initialise Register form 
+ */
+  _initForm() {
     this.registerForm = this._formService.group({
       username: [this.route.snapshot.paramMap.get('username'), Validators.required],
       email: [this.route.snapshot.paramMap.get('email'), [Validators.required, CustomValidator.emailValidator]],
-      password: ['', [Validators.required,Validators.minLength(7),Validators.maxLength(30)]]
+      password: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(30)]]
     });
-
   }
 
   ngOnDestroy() {
-    if(!!this.createAccountSubscription) {
+    if (!!this.createAccountSubscription) {
       this.createAccountSubscription.unsubscribe();
     }
   }
@@ -66,15 +73,17 @@ export class RegisterPage implements OnInit {
     this.modalCtrl.dismiss(data);
   }
 
+
   ionViewDidEnter() {
+    //Set cursor
     setTimeout(() => {
-      if(this.input)
+      if (this.input)
         this.input.setFocus();
     }, 200);
-  } 
+  }
 
   /**
-   * Submit form to register 
+   * Submit form to create an account 
    */
   registerSubmit() {
 
@@ -83,19 +92,26 @@ export class RegisterPage implements OnInit {
 
     this.isLoading = true;
 
-    this.createAccountSubscription = this._authService.createAccount(this.registerForm.value).subscribe(res => {
+    this.createAccountSubscription = this._authService.createAccount(this.registerForm.value).subscribe(async res => {
 
       if (res.operation == "success") {
 
+        //Save user's data 
         this.storage.set("unVerifiedToken", res.unVerifiedToken);
-        
-        this.modalCtrl.dismiss({ 
-          from: 'native-back-btn'
+
+        const toast = await this.toastController.create({
+          message: res.message,
+          duration: 2000
         });
 
-        this.events.publish('verify-email', { 
+        await toast.present();
+
+        //Go to Landing page
+        this.navCtrl.navigateBack('/landing');
+
+        this.events.publish('verify-email', {
           email: this.registerForm.controls.email.value,
-          candidate_uuid: res.candidate_uuid
+          user_uuid: res.user_uuid
         });
       }
       else if (res.operation == "error") {

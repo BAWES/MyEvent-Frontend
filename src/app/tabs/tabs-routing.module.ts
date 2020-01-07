@@ -8,40 +8,55 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'tab1',
-        redirectTo: '/register',
-        pathMatch: 'prefix'
-      },
-      {
-        path: 'tab2',
+        path: 'home',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../tab2/tab2.module').then(m => m.Tab2PageModule)
+              import('../tab1/tab1.module').then(m => m.Tab1PageModule)
           }
         ]
       },
       {
-        path: 'tab3',
+        path: 'add-venue',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+              import('../pages/logged-in/add-venue/add-venue.module').then(m => m.AddVenuePageModule)
+          }
+        ]
+      },
+      {
+        path: 'landing',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../pages/start-pages/landing/landing.module').then(m => m.LandingPageModule)
+          },
+          {
+            path: '',
+            loadChildren: () =>
+              import('../pages/start-pages/login/login.module').then(m => m.LoginPageModule)
+          },
+          {
+            path: '',
+            loadChildren: () =>
+              import('../pages/start-pages/register/register.module').then(m => m.RegisterPageModule)
           }
         ]
       },
       {
         path: '',
-        redirectTo: '/register',
+        redirectTo: '/tabs/home',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/register',
+    redirectTo: '/tabs/home',
     pathMatch: 'full'
   }
 ];

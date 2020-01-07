@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
@@ -9,7 +9,15 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
-import { IonicStorageModule } from '@ionic/storage';
+import { IonicStorageModule, Storage } from '@ionic/storage';
+import { AuthService } from './services/auth.service';
+
+export function startupServiceFactory(authService, storage) {
+  if (typeof authService != 'undefined') {
+    return authService.load();
+  }
+  return () => {};
+}
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,6 +31,13 @@ import { IonicStorageModule } from '@ionic/storage';
     AppRoutingModule
   ],
   providers: [
+    {
+      // Provider for APP_INITIALIZER
+      provide: APP_INITIALIZER,
+      useFactory: startupServiceFactory,
+      deps: [AuthService, Storage],
+      multi: true
+    },
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }

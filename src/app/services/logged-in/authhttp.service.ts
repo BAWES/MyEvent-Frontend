@@ -132,13 +132,6 @@ export class AuthHttpService {
     let errMsg = (error.message) ? error.message :
       error.status ? `${error.status} - ${error.statusText}` : 'Server error';
 
-    // Handle Bad Requests
-    // This error usually appears when agent attempts to handle an 
-    // account that he's been removed from assigning
-    if (error.status === 400) {
-      this._events.publish("accountAssignment:removed");
-      return empty();
-    }
 
     // Handle No Internet Connection Error
 

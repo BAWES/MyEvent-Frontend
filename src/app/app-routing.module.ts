@@ -9,6 +9,22 @@ const routes: Routes = [
   {
     path: 'register',
     loadChildren: () => import('./pages/start-pages/register/register.module').then( m => m.RegisterPageModule)
+  },
+  {
+    path: 'landing',
+    loadChildren: () => import('./pages/start-pages/landing/landing.module').then( m => m.LandingPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/start-pages/login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./pages/start-pages/register/register.module').then( m => m.RegisterPageModule)
+  },
+  {
+    path: 'add-venue',
+    loadChildren: () => import('./pages/logged-in/add-venue/add-venue.module').then( m => m.AddVenuePageModule)
   }
 ];
 @NgModule({

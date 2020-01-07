@@ -1,30 +1,18 @@
 <ion-header>
   <ion-toolbar>
-    <!-- Page title-->
-    <ion-title>register</ion-title>
-
-    <!-- Back Button -->
-    <ion-buttons slot="start">
-      <ion-back-button text="Back"></ion-back-button>
-    </ion-buttons>
+    <ion-title>login</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
   <!-- Sing up Form-->
-  <form [formGroup]="registerForm" (ngSubmit)="registerSubmit()" novalidate>
-
-    <!-- Username field-->
-    <ion-item>
-      <ion-label position="floating">Username</ion-label>
-      <ion-input autocomplete="username" formControlName="username" #input type="text"></ion-input>
-    </ion-item>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" (keyup.enter)="onSubmit()" class="classicInput" novalidate>
 
     <!-- Email field-->
     <ion-item>
       <ion-label position="floating">Email</ion-label>
-      <ion-input formControlName="email" pattern="^\S*[@]\S*[.]\S*$" email type="email"></ion-input>
+      <ion-input formControlName="email" pattern="^\S*[@]\S*[.]\S*$"  #input email type="email"></ion-input>
     </ion-item>
 
 
@@ -40,12 +28,11 @@
 
 
     <!-- Submit Sign up form Button-->
-    <ion-button type="submit" [disabled]="!registerForm.valid || isLoading">
+    <ion-button type="submit" [disabled]="!loginForm.valid || isLoading">
       <ion-spinner *ngIf="isLoading"></ion-spinner>
-      <span *ngIf="!isLoading">Create an account</span>
+      <span *ngIf="!isLoading">Login</span>
     </ion-button>
 
   </form>
-
 
 </ion-content>

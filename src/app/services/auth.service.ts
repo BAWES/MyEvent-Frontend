@@ -40,42 +40,53 @@ export class AuthService implements CanActivate {
     public _alertCtrl: AlertController,
     public _loadingCtrl: LoadingController,
     public modalCtrl: ModalController
-  ) {}
+  ) { }
 
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    
+): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+  /**
+   * new router changes don't wait for startup service
+   * https://github.com/angular/angular/issues/14615
+   */
+  return new Promise(resolve => {
+
     if (this.isLogin) {
-      return true;
+      resolve(true);
     }
 
-    /**
-     * new router changes don't wait for startup service
-     * https://github.com/angular/angular/issues/14615
-     */
-    return new Promise(resolve => {
+    this._storage.get('loggedInUser').then(data => {
+      if (
+          data &&
+          data.token &&
+          data.user_uuid &&
+          data.user_name
+      ) {
 
-      this._storage.get('loggedInUser').then(data => { 
-        if (data && data.token) {
-          this.isLogin = true;
-          this._accessToken = data.token;
-          resolve(true);
-        } else {
-          resolve(false); 
-          this.router.navigate(['view']);
-        }
-      });
+        // to enable page to call restricted apis
+        this.isLogin = true;
+        this._accessToken = data.token;
+
+        // set token without redirect if not already setting
+        // this.setAccessToken(data, false);
+        resolve(true);
+      } else {
+        resolve(false);
+        this.logout('invalid access');
+      }
     });
-  }
+  });
+}
+
 
   /**
    * Logs a user out by setting logged in to false and clearing token from storage
    * @param {string} [reason]
    */
   logout(reason?: string) {
+
 
     // if(!this._accessToken)
     //  return null;
@@ -90,10 +101,34 @@ export class AuthService implements CanActivate {
 
   }
 
+
+  /**
+   * This is the method you want to call at bootstrap
+   */
+  load(): Promise<any> {
+
+    const promises = [
+      this._storage.get('loggedInUser'),
+    ];
+
+    return Promise.all(promises)
+      .then(data => {
+
+        if (data[0]) {
+          this.setAccessToken(
+            data[0]
+          );
+        }
+      })
+      .then(data => {
+        // return this.logout('promise fail');
+      });
+  }
+
   /**
    * Set the access token
    */
-  setAccessToken(data, redirect = null) { 
+  setAccessToken(data, redirect = null) {
 
     this.isLogin = true;
 
@@ -101,16 +136,17 @@ export class AuthService implements CanActivate {
 
 
     // Save to Storage for future reference
-
+    
     this._storage.set('loggedInUser', {
-      token: data.token
+      token: data.token,
+      user_uuid: data.user_uuid,
+      user_name: data.user_name,
+      user_email: data.user_email
     });
 
 
     // Log User )In by Triggering Event that Access Token has been Set
-
-    this._events.publish('user:login', { 'redirect': redirect });
-
+    this._events.publish('user:login');
 
     return this._accessToken;
   }
@@ -124,8 +160,8 @@ export class AuthService implements CanActivate {
 
     const data = await this._storage.get('loggedInUser');
 
-    if (data && data.token) { 
-          
+    if (data && data.token) {
+
       this.setAccessToken(
         data,
         redirect
@@ -203,16 +239,14 @@ export class AuthService implements CanActivate {
 
       if (res.operation == 'success') {
         const view = (res.new_user == 1) ? 'welcome' : 'view';
-        this.setAccessToken(res, view); 
-      } 
-      else if (res.operation == 'error' && res.errorType == 'email-not-verified') 
-      {
+        this.setAccessToken(res, view);
+      }
+      else if (res.operation == 'error' && res.errorType == 'email-not-verified') {
         this._storage.set('unVerifiedToken', res.unVerifiedToken);
 
         this.router.navigateByUrl('/verify-email', { state: { email: email } });
-      } 
-      else 
-      {
+      }
+      else {
         const alert = await this._alertCtrl.create({
           header: 'Unable to Log In',
           message: res.message,
@@ -257,13 +291,13 @@ export class AuthService implements CanActivate {
     return this._http.post(url, JSON.stringify({
       'email': email
     }), {
-        headers: headers
-      }).pipe(
-        retryWhen(genericRetryStrategy()),
-        catchError((err) => this._handleError(err)),
-        first(),
-        map((res) => { return res; })
-      );
+      headers: headers
+    }).pipe(
+      retryWhen(genericRetryStrategy()),
+      catchError((err) => this._handleError(err)),
+      first(),
+      map((res) => { return res; })
+    );
   }
 
   /**
@@ -277,7 +311,7 @@ export class AuthService implements CanActivate {
       retryWhen(genericRetryStrategy()),
       catchError((err) => this._handleError(err)),
       first(),
-        map((res) => { return res; })
+      map((res) => { return res; })
     );
   }
 
@@ -292,7 +326,7 @@ export class AuthService implements CanActivate {
       retryWhen(genericRetryStrategy()),
       catchError((err) => this._handleError(err)),
       first(),
-        map((res) => { return res; })
+      map((res) => { return res; })
     );
   }
 
@@ -308,7 +342,7 @@ export class AuthService implements CanActivate {
       retryWhen(genericRetryStrategy()),
       catchError((err) => this._handleError(err)),
       first(),
-        map((res) => { return res; })
+      map((res) => { return res; })
     );
   }
 
@@ -333,23 +367,16 @@ export class AuthService implements CanActivate {
     const errMsg = (error.message) ? error.message :
       error.status ? `${error.status} - ${error.statusText}` : 'Server error';
 
-    // Handle Bad Requests
-    // This error usually appears when agent attempts to handle an
-    // account that he's been removed from assigning
-    if (error.status === 400) {
-      this._events.publish('accountAssignment:removed');
-      return empty();
-    }
 
     // Handle No Internet Connection Error
-    
+
     if (error.status == 0 || error.status == 504) {
       this._events.publish('internet:offline');
       // this._auth.logout("Unable to connect to Pogi servers. Please check your internet connection.");
       return empty();
     }
 
-    if(!navigator.onLine || error.status === 504) {
+    if (!navigator.onLine || error.status === 504) {
       this._events.publish('internet:offline');
       return empty();
     }

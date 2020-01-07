@@ -1,44 +1,22 @@
 <ion-header>
   <ion-toolbar>
-
-    <!-- Back button -->
-    <ion-buttons slot="start">
-      <ion-back-button  mode="md" (click)="dismiss()"></ion-back-button>
-    </ion-buttons>
-
+    <ion-title>landing</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content class='contentArea'>
 
-
-  <div class="div-text">
-    <div>
-      <p class="join-us-txt">
-        {{"With an account you'll be able to review and keep track of dishes and restaurants you like" | translate}}
-      </p>
-    </div>
-  </div>
-
+<ion-content>
   <section class="div-button ion-text-center">
+    <div class="div-margin">
 
-    <!-- Google log in button -->
-    <ion-button (click)="googleLogin()" fill="outline" class="btn-google google-logo">
-      <ion-ripple-effect></ion-ripple-effect>
-      <span *ngIf="!googleLoading">{{"Continue with Google" | translate}}</span>
-      <ion-spinner *ngIf="googleLoading"></ion-spinner>
-    </ion-button>
+      <!-- Sign up with Email button -->
+      <ion-button color="primary" [routerLink]="'/register'">
+        Sign up with Email
+      </ion-button>
 
-    <!-- Sign up w/Email button-->
-    <ion-button (click)="register()" fill="solid" color="dark" class="btn-login">
-      <ion-ripple-effect></ion-ripple-effect>
-      {{"Sign up with Email" | translate}}
-    </ion-button>
-
-
-    <!-- Login with email-->
-    <ion-button class="login-btn" fill='clear' (click)="loginByEmail()">
-      {{"Login to your Yo3an Account" | translate}}
-    </ion-button>
+      <!-- Login Button -->
+      <ion-button color="primary" [routerLink]="'/login'">
+        Login
+      </ion-button>
+    </div>
   </section>
-
 </ion-content>
