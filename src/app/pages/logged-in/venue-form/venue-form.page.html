@@ -15,6 +15,14 @@
       <ion-input autocomplete="username" formControlName="venue_name" #input type="text"></ion-input>
     </ion-item>
 
+    <!-- Occasion field-->
+    <!-- <ion-item>
+      <ion-label>Occasion</ion-label>
+      <ion-select formControlName="occasion" multiple="true" cancelText="Cancel" okText="Ok" *ngFor="let occasion  of occasions">
+        <ion-select-option value="{{occasion.occasion_uuid}}">{{occasion.occasion_name}}</ion-select-option>
+      </ion-select>
+    </ion-item> -->
+
     <!-- Venue Location field-->
     <ion-item>
       <ion-label position="floating">Venue Location</ion-label>

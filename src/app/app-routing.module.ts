@@ -25,6 +25,10 @@ const routes: Routes = [
   {
     path: 'venue-form:venue_uuid',
     loadChildren: () => import('./pages/logged-in/venue-form/venue-form.module').then(m => m.VenueFormPageModule)
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./pages/logged-in/profile/profile.module').then( m => m.ProfilePageModule)
   }
 ];
 @NgModule({

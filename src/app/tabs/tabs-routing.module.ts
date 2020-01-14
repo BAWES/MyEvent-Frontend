@@ -28,6 +28,16 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'profile',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../pages/logged-in/profile/profile.module').then(m => m.ProfilePageModule)
+          }
+        ]
+      },
+      {
         path: 'landing',
         children: [
           {

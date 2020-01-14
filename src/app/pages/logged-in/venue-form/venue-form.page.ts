@@ -10,6 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Venue } from 'src/app/models/venue';
 import { CustomValidator } from 'src/app/validators/custom.validator';
 import { VenueService } from 'src/app/services/logged-in/venue.service';
+import { OccasionService } from 'src/app/services/occasion.service';
 
 @Component({
   selector: 'app-venue-form',
@@ -24,6 +25,8 @@ export class VenueFormPage implements OnInit {
 
   public venue: Venue;
 
+  public occasions;
+
   public venue_uuid;
 
   public showPass = false;
@@ -37,6 +40,7 @@ export class VenueFormPage implements OnInit {
     public _fb: FormBuilder,
     public events: Events,
     public venueService: VenueService,
+    public occasionService: OccasionService,
     public toastController: ToastController,
     public router: Router,
     public route: ActivatedRoute,
@@ -76,10 +80,10 @@ export class VenueFormPage implements OnInit {
       venue_capacity_minimum: [this.venue.venue_capacity_minimum],
       venue_capacity_maximum: [this.venue.venue_capacity_maximum],
       venue_operating_hours: [this.venue.venue_operating_hours],
-      venue_restrictions: [this.venue.venue_restrictions]
+      venue_restrictions: [this.venue.venue_restrictions],
+      occasion: ['', [Validators.required]],
     });
   }
-
 
   ionViewWillLeave() {
     this.isLoading = false;
@@ -89,6 +93,12 @@ export class VenueFormPage implements OnInit {
     if (!!this.venueSubscription) {
       this.venueSubscription.unsubscribe();
     }
+  }
+
+  ionViewWillEnter(){
+    this.occasionService.listAllOccasions().subscribe(response=>{
+      this.occasions = response;
+    })
   }
 
   /**
@@ -117,6 +127,8 @@ export class VenueFormPage implements OnInit {
         this.router.navigate(['']);
 
       }  else {
+        console.log(JSON.stringify(res.message));
+        
         this._alertCtrl.create({
           header: 'Unable to Create a venue',
           message: res.message,
